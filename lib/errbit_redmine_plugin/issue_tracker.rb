@@ -81,7 +81,7 @@ module ErrbitRedminePlugin
       errors
     end
 
-    def create_issue(problem, reported_by = nil)
+    def create_issue(title, body, user = {})
       token  = options['api_token']
       acc    = options['account']
       user   = options['username']
@@ -98,8 +98,8 @@ module ErrbitRedminePlugin
       end
 
       issue = RedmineClient::Issue.new(:project_id => project_id)
-      issue.subject = "[#{ problem.environment }][#{ problem.where }] #{problem.message.to_s.truncate(100)}"
-      issue.description = self.class.body_template.result(binding)
+      issue.subject = title # "[#{ problem.environment }][#{ problem.where }] #{problem.message.to_s.truncate(100)}"
+      issue.description = body # self.class.body_template.result(binding)
       issue.tracker_id = tracker_id if tracker_id.present?
       issue.save!
 
