@@ -50,8 +50,8 @@ module ErrbitRedminePlugin
     end
 
     def url
-      account = params['account']
-      project_id = params['project_id']
+      account = options['account']
+      project_id = options['project_id']
 
       acc_url = account.start_with?('http') ? account : "http://#{account}"
       acc_url = acc_url.gsub(/\/$/, '')
@@ -65,8 +65,8 @@ module ErrbitRedminePlugin
 
     # configured properly if all the fields are filled in
     def configured?
-      non_empty_params = params.reject { |k,v| v.empty? }.keys.map(&:intern)
-      (required_fields - non_empty_params).empty?
+      non_empty_options = options.reject { |k,v| v.empty? }.keys.map(&:intern)
+      (required_fields - non_empty_options).empty?
     end
 
     def required_fields
@@ -82,12 +82,12 @@ module ErrbitRedminePlugin
     end
 
     def create_issue(problem, reported_by = nil)
-      token  = params['api_token']
-      acc    = params['account']
-      user   = params['username']
-      passwd = params['password']
-      project_id = params['project_id']
-      tracker_id = params['tracker_id']
+      token  = options['api_token']
+      acc    = options['account']
+      user   = options['username']
+      passwd = options['password']
+      project_id = options['project_id']
+      tracker_id = options['tracker_id']
 
       RedmineClient::Base.configure do
         self.token = token
@@ -110,7 +110,7 @@ module ErrbitRedminePlugin
     end
 
     def issue_link(issue)
-      project_id = params['project_id']
+      project_id = options['project_id']
 
       RedmineClient::Issue.site.to_s
         .sub(/#{RedmineClient::Issue.site.path}$/, '') <<
