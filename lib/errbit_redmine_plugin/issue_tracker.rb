@@ -98,26 +98,21 @@ module ErrbitRedminePlugin
       end
 
       issue = RedmineClient::Issue.new(:project_id => project_id)
-      issue.subject = title # "[#{ problem.environment }][#{ problem.where }] #{problem.message.to_s.truncate(100)}"
-      issue.description = body # self.class.body_template.result(binding)
+      issue.subject = title
+      issue.description = body 
       issue.tracker_id = tracker_id if tracker_id.present?
       issue.save!
 
-      problem.update_attributes(
-        :issue_link => issue_link(issue),
-        :issue_type => LABEL
-      )
+      issue_link(issue,project_id)
     end
 
-    def issue_link(issue)
-      project_id = options['project_id']
-
+    def issue_link(issue,project_id)
       RedmineClient::Issue.site.to_s
         .sub(/#{RedmineClient::Issue.site.path}$/, '') <<
       RedmineClient::Issue.element_path(issue.id, :project_id => project_id)
         .sub(/\.xml\?project_id=#{project_id}$/, "\?project_id=#{project_id}")
     end
-
+    
     def self.body_template
       @body_template ||= ERB.new(File.read(
         File.join(
