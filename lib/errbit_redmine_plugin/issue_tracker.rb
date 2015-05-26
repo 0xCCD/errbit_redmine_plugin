@@ -37,6 +37,20 @@ module ErrbitRedminePlugin
 
     NOTE = "REST web service must be enabled in Redmine"
 
+    def self.icons
+      @icons ||= {
+        create: [
+          'image/png', ErrbitRedminePlugin.read_static_file('redmine_create.png')
+        ],
+        goto: [
+          'image/png', ErrbitRedminePlugin.read_static_file('redmine_goto.png'),
+        ],
+        inactive: [
+          'image/png', ErrbitRedminePlugin.read_static_file('redmine_inactive.png'),
+        ]
+      }
+    end
+
     def self.label
       LABEL
     end
